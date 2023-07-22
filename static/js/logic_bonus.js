@@ -13,6 +13,8 @@ console.log("Start of code in logic_1, testing")
 // logic_4 creates a basic legend for the color used to 
 // indicate depth of the earthquake and info box to explain circle radius is magnitude
 
+// logic_bonus add tectonic plates layer to our map control layer
+
 // Create the base layers.
 let street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' +
@@ -33,9 +35,13 @@ let baseMaps = {
 // Create an empty new leaflet layerGroup for earthquakes 
 let earthquakes = new L.layerGroup()
 
+// Create an empty (new) leaflet layerGroup for tectonic plates
+let tectonic = new L.layerGroup();
+
 // Create an overlay object to hold our overlay.
 let overlayMaps = {
-    Earthquakes: earthquakes
+    Earthquakes: earthquakes,
+    "Tectonic Plates": tectonic
 };
 
 // Create our map, giving it the streetmap and earthquakes layers to display on load.
@@ -44,7 +50,7 @@ let myMap = L.map("map", {
         37.09, -95.71
     ],
     zoom: 5,
-    layers: [street, earthquakes]
+    layers: [topo, earthquakes, tectonic]
 });
 
 // Create a layer control.
@@ -159,6 +165,20 @@ d3.json(queryUrl).then(function (data) {
 
     //data with d3 is only available above this point!
 });
+
+//start of tectonic plates
+//get data from https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json
+let tectonicURL = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json"
+
+//use d3.json to perform AJAX to get data and then use it
+d3.json(tectonicURL).then(function (tectonicData){
+    // view data in console
+    console.log(tectonicData);
+    // use geoJSON() 
+    L.geoJSON(tectonicData, 
+        {color: "brown", weight: 3}).addTo(tectonic);
+});
+
 
 
 
